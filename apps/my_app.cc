@@ -43,14 +43,17 @@ void MyApp::DrawCar() {
   ci::gl::draw(texture2D_car,
       ci::Rectf(getWindowCenter().x*car_rect_x1_factor,
           getWindowCenter().y*car_rect_y1_factor, getWindowWidth()*car_rect_x2_factor,
-          getWindowHeight() * car_rect_y2_factor));
+          getWindowHeight() + car_rect_y2_factor));
 }
 
 void MyApp::DrawCoin() {
   auto coin_image = loadImage( loadAsset( "coin.jpg"));
   ci::gl::Texture2dRef texture2D_coin = ci::gl::Texture2d::create(coin_image);
   ci::gl::draw(texture2D_coin,
-               ci::Rectf(getWindowCenter().x * 0.47, getWindowCenter().y * 0.08, getWindowCenter().x * 0.6  ,getWindowCenter().y * 0.3));
+               ci::Rectf(getWindowCenter().x * coin_rect_x1_factor,
+                   getWindowCenter().y * coin_rect_y1_factor,
+                   getWindowCenter().x * coin_rect_x2_factor,
+                   getWindowCenter().y * coin_rect_y2_factor));
 }
 
 void MyApp::keyDown(KeyEvent event) { }
