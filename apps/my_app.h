@@ -24,8 +24,15 @@ class MyApp : public cinder::app::App {
  private:
   void DrawBackground();
   void DrawCar();
-  ci::gl::Texture2dRef texture2D_background;
-  ci::gl::Texture2dRef texture2D_car;
+  void DrawCoin();  
+  float car_rect_x1_factor = 1.35;
+  float car_rect_y1_factor = 1.45;
+  float car_rect_x2_factor = 0.79;
+  float car_rect_y2_factor = 0.0;
+  float coin_rect_x1_factor = 0.47;
+  float coin_rect_y1_factor = 0.08;
+  float coin_rect_x2_factor = 0.6;
+  float coin_rect_y2_factor = 0.3;
 };
 
 }  // namespace myapp
