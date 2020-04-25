@@ -22,7 +22,10 @@ class MyApp : public cinder::app::App {
   void keyDown(cinder::app::KeyEvent) override;
   
  private:
-  ci::gl::Texture2dRef mTex;
+  void DrawBackground();
+  void DrawCar();
+  ci::gl::Texture2dRef texture2D_background;
+  ci::gl::Texture2dRef texture2D_car;
 };
 
 }  // namespace myapp
