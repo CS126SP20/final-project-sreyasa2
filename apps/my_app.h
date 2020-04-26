@@ -9,9 +9,16 @@
 #include <cinder/gl/gl.h>
 #include "cinder/ImageIo.h"
 #include "cinder/gl/Texture.h"
+#include "cinder/Vector.h"
 
 
 namespace myapp {
+
+enum class GameState {
+  Playing,
+  Paused,
+  Over,
+};
 
 class MyApp : public cinder::app::App {
  public:
@@ -24,7 +31,8 @@ class MyApp : public cinder::app::App {
  private:
   void DrawBackground();
   void DrawCar();
-  void DrawCoin();  
+  void DrawCoin();
+  void DrawObstacle();
   float car_rect_x1_factor = 1.35;
   float car_rect_y1_factor = 1.45;
   float car_rect_x2_factor = 0.79;
@@ -33,6 +41,7 @@ class MyApp : public cinder::app::App {
   float coin_rect_y1_factor = 0.08;
   float coin_rect_x2_factor = 0.6;
   float coin_rect_y2_factor = 0.3;
+  GameState game_state;
 };
 
 }  // namespace myapp

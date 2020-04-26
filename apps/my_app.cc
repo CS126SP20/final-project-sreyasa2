@@ -12,7 +12,9 @@ namespace myapp {
 using cinder::app::KeyEvent;
 using ci::gl::Texture;
 
-MyApp::MyApp() { }
+MyApp::MyApp():
+    game_state{GameState::Playing} {}
+  
 
 void MyApp::setup() {
   cinder::gl::enableDepthWrite();
@@ -29,6 +31,7 @@ void MyApp::draw() {
   DrawBackground();
   DrawCar();
   DrawCoin();
+  DrawObstacle();
 }
 
 void MyApp::DrawBackground() {
@@ -56,7 +59,8 @@ void MyApp::DrawCoin() {
                    getWindowCenter().y * coin_rect_y2_factor));
 }
 
-void MyApp::keyDown(KeyEvent event) { }
+void MyApp::DrawObstacle() {}
 
+void MyApp::keyDown(KeyEvent event) { }
 
 }  // namespace myapp
