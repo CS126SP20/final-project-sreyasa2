@@ -9,6 +9,7 @@
 #include <iostream>
 
 namespace mylibrary {
+
 // Represents a location on the board.
 class Location {
  public:
@@ -43,5 +44,5 @@ class Location {
 std::ostream& operator<<(std::ostream& os, const Location& location);
 
 }
-}
+
 #endif  // FINALPROJECT_LOCATION_H
