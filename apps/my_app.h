@@ -27,6 +27,9 @@ class MyApp : public cinder::app::App {
   void update() override;
   void draw() override;
   void keyDown(cinder::app::KeyEvent) override;
+  void enableFileLogging();
+  void enableFileLoggingRotating();
+  void enableSysLogging();
   
  private:
   void DrawBackground();
