@@ -18,7 +18,8 @@ using namespace ci;
 using namespace ci::app;
 
 MyApp::MyApp():
-    game_state{GameState::Playing} {}
+    game_state{GameState::Playing},
+    engine(size) {}
   
 
 void MyApp::setup() {
@@ -54,9 +55,10 @@ void MyApp::DrawBackground() {
 void MyApp::DrawCar() {
   auto car_image = loadImage( loadAsset( "car.jpg"));
   ci::gl::Texture2dRef texture2D_car = ci::gl::Texture2d::create(car_image);
+  mylibrary::Location car_loc = engine.GetCar().GetLocation();
   ci::gl::draw(texture2D_car,
-      ci::Rectf(540,
-          getWindowHeight() - 200, 635,getWindowHeight()));
+      ci::Rectf(car_loc.Row(), getWindowHeight() - car_height, car_loc.Row() + lane_width,
+          getWindowHeight()));
 }
 
 void MyApp::DrawCoin() {

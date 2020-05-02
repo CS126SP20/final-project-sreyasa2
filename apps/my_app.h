@@ -4,13 +4,13 @@
 #define FINALPROJECT_APPS_MYAPP_H_
 
 #include <cinder/app/App.h>
-#include "CinderImGui.h"
-#include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
-#include "cinder/ImageIo.h"
-#include "cinder/gl/Texture.h"
-#include "cinder/Vector.h"
+#include <mylibrary/engine.h>
 
+#include "CinderImGui.h"
+#include "cinder/ImageIo.h"
+#include "cinder/Vector.h"
+#include "cinder/gl/Texture.h"
 
 namespace myapp {
 
@@ -52,6 +52,7 @@ class MyApp : public cinder::app::App {
   int vert_dist = 50;
   int hori_dist = 30;
   const size_t size = 800;
+  mylibrary::Engine engine;
 };
 
 }  // namespace myapp

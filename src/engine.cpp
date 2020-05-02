@@ -11,6 +11,8 @@
 
 namespace mylibrary {
 
+
+
 Location FromDirection(const Direction direction) {
   switch (direction) {
     case Direction::left:
@@ -22,32 +24,38 @@ Location FromDirection(const Direction direction) {
   throw std::out_of_range("switch statement not matched");
 }
 
-Engine::Engine(size_t size_input)
+Engine::Engine(const size_t size_input)
  : car(GetCarLocation()),
-   obstacle(GetObjectLocation()),
-   coin(GetObjectLocation()),
+   obstacle(lanes[1]),
+   coin(lanes[0]),
    next_direction(Direction::left) {
-  size = size_input;
+     size = size_input;
+     occupied_lanes = {};
 }
 
 Location Engine::GetObjectLocation() {
   int rand_lane = GetRandomLane();
-  occupied_lanes.push_back(rand_lane);
-  return lanes[rand_lane];
+  Location location(lanes[rand_lane]);
+  occupied_lanes.push_back(location);
+  return lanes.at(rand_lane);
 }
 
 Location Engine::GetCarLocation() { 
-  return Location(lanes[0].Row(), 600); 
+  return lanes[0]; 
 }
 
 int Engine::GetRandomLane() const {
-  int rand_loc = ci::randInt(0, 3);
-  for (int i = 0; i < occupied_lanes.size(); i++) {
-    if (rand_loc == occupied_lanes[i]) {
-      rand_loc = ci::randInt(0, 3);
-      i = 0;
-    }
+  int rand_loc = ci::randInt(0, 4);
+  if (occupied_lanes.empty()) {
+    return rand_loc;
+  }
+  auto i = std::find(occupied_lanes.begin(), occupied_lanes.end(), lanes.at(rand_loc));
+  while (i != occupied_lanes.end()) {
+    rand_loc = ci::randInt(0, 4);
+    i = std::find(occupied_lanes.begin(), occupied_lanes.end(), lanes.at(rand_loc));
   }
   return rand_loc;
 }
+
+Car Engine::GetCar() const { return car; }
 }  // namespace mylibrary
