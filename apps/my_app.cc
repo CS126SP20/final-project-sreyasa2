@@ -7,6 +7,7 @@
 #include "cinder/ImageIo.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/Log.h"
+
 #include <iostream>
 
 namespace myapp {
@@ -21,8 +22,6 @@ MyApp::MyApp():
   
 
 void MyApp::setup() {
-  std::cout << "Hello" << std::endl;
-  CI_LOG_D("ello");
   cinder::gl::enableDepthWrite();
   cinder::gl::enableDepthRead();
   enableFileLogging();
@@ -43,6 +42,7 @@ void MyApp::draw() {
   DrawCar();
   DrawCoin();
   DrawObstacle();
+  DrawTest();
 }
 
 void MyApp::DrawBackground() {
@@ -55,9 +55,8 @@ void MyApp::DrawCar() {
   auto car_image = loadImage( loadAsset( "car.jpg"));
   ci::gl::Texture2dRef texture2D_car = ci::gl::Texture2d::create(car_image);
   ci::gl::draw(texture2D_car,
-      ci::Rectf(getWindowCenter().x*car_rect_x1_factor,
-          getWindowCenter().y*car_rect_y1_factor, getWindowWidth()*car_rect_x2_factor,
-          getWindowHeight() + car_rect_y2_factor));
+      ci::Rectf(540,
+          getWindowHeight() - 200, 635,getWindowHeight()));
 }
 
 void MyApp::DrawCoin() {
@@ -66,12 +65,19 @@ void MyApp::DrawCoin() {
   ci::gl::Texture2dRef texture2D_coin = ci::gl::Texture2d::create(coin_image);
   ci::gl::draw(texture2D_coin,
                ci::Rectf(getWindowCenter().x * coin_rect_x1_factor,
-                   getWindowCenter().y * coin_rect_y1_factor,
+                   0,
                    getWindowCenter().x * coin_rect_x2_factor,
-                   getWindowCenter().y * coin_rect_y2_factor));
+                   100));
 }
 
 void MyApp::DrawObstacle() {}
+
+void MyApp::DrawTest() {
+  ci::gl::drawSolidRect(ci::Rectf(290, 150, 385, 250));
+  ci::gl::drawSolidRect(ci::Rectf(170, 150, 265, 250));
+  ci::gl::drawSolidRect(ci::Rectf(410, 150, 505, 250));
+  ci::gl::drawSolidRect(ci::Rectf(530, 150, 625, 250));
+}
 
 void MyApp::keyDown(KeyEvent event) { }
 

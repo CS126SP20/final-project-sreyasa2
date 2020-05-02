@@ -36,6 +36,7 @@ class MyApp : public cinder::app::App {
   void DrawCar();
   void DrawCoin();
   void DrawObstacle();
+  void DrawTest();
   float car_rect_x1_factor = 1.35;
   float car_rect_y1_factor = 1.45;
   float car_rect_x2_factor = 0.79;
@@ -45,6 +46,12 @@ class MyApp : public cinder::app::App {
   float coin_rect_x2_factor = 0.6;
   float coin_rect_y2_factor = 0.3;
   GameState game_state;
+  int lane_width = 95;
+  int coin_height = 100;
+  int car_height = 200;
+  int vert_dist = 50;
+  int hori_dist = 30;
+  const size_t size = 800;
 };
 
 }  // namespace myapp

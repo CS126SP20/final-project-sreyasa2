@@ -10,19 +10,23 @@
 #include "coin.h"
 #include <set>
 #include <random>
+#include <vector>
+#include "cinder/Rand.h"
 
 namespace mylibrary {
 
 enum class Direction {left, right};
+std::vector<Location> lanes = {Location(170, 0),
+                                  Location(290, 0),
+                                  Location(410, 0),
+                                  Location(530, 0)};
 
 class Engine {
   
  public:
   
-  Engine();
-  
-  Engine(unsigned seed);
-  
+  Engine(size_t size);
+    
   void Step();
   
   void Reset();
@@ -37,15 +41,19 @@ class Engine {
   
   Coin GetCoin() const;
   
+  int GetRandomLane() const;
+  
  private:
-  Location GetLocationOnBoard();
-  std::set<Location> GetOccupiedTiles();
+  Location GetObjectLocation();
+  Location GetCarLocation();
   
  private:
   Car car;
   Coin coin;
   Obstacle obstacle;
-  Direction next_direction;  
+  Direction next_direction;
+  size_t size;
+  std::vector<int> occupied_lanes = {};
 };
 }
 #endif  // FINALPROJECT_ENGINE_H
