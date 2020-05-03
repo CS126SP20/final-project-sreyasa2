@@ -17,7 +17,7 @@ class Coin {
   Coin& operator=(const Coin&);
   Coin& operator=(Coin&&) noexcept;
   ~Coin();
-
+  Location SetLocation(const Location&);
   Location GetLocation() const;
 
  private:
