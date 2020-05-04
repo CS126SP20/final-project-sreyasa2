@@ -65,7 +65,7 @@ std::vector<Obstacle> Engine::GetObstacle() const { return obstacles; }
 void Engine::Step() {
   for (int i = 0; i < coins.size(); i++) {
     Location coin_loc = coins[i].GetLocation();
-    coins[i].SetLocation(Location(coin_loc.Row(), coin_loc.Col() + 50));
+    coins[i].SetLocation(Location(coin_loc.Row(), coin_loc.Col() + 150));
     if (coins[i].GetLocation().Col() >= size) {
       auto iterator = std::find(coins.begin(), coins.end(), coins[i]);
       coins.erase(iterator);
@@ -73,7 +73,7 @@ void Engine::Step() {
   }
   for (int i = 0; i < obstacles.size(); i++) {
     Location obstacle_loc = obstacles[i].GetLocation();
-    obstacles[i].SetLocation(Location(obstacle_loc.Row(), obstacle_loc.Col() + 50));
+    obstacles[i].SetLocation(Location(obstacle_loc.Row(), obstacle_loc.Col() + 150));
     if (obstacles[i].GetLocation().Col() >= size) {
       auto iterator = std::find(obstacles.begin(), obstacles.end(), obstacles[i]);
       obstacles.erase(iterator);

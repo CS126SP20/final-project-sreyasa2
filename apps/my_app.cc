@@ -41,7 +41,7 @@ void MyApp::setup() {
 void MyApp::update() {
   CI_LOG_V("Window bounds " << getWindowBounds());
   const auto time = std::chrono::system_clock::now();
-  if (time - last_time_frame > std::chrono::milliseconds(speed_)) {
+  if (time - last_time_frame > std::chrono::milliseconds(2000)) {
     engine.Step();
     last_time_frame = time;
   }
