@@ -33,9 +33,9 @@ void MyApp::setup() {
 void MyApp::update() {
   CI_LOG_V("Window bounds " << getWindowBounds());
   const auto time = std::chrono::system_clock::now();
-  if (time - last_time_ > std::chrono::milliseconds(speed_)) {
+  if (time - last_time_frame > std::chrono::milliseconds(speed_)) {
     engine.Step();
-    last_time_ = time;
+    last_time_frame = time;
   }
 }
 
@@ -67,21 +67,29 @@ void MyApp::DrawCar() {
 }
 
 void MyApp::DrawCoin() {
-  auto coin_image = loadImage( loadAsset( "coin.jpg"));
+  auto coin_image = loadImage( loadAsset( "coins.jpg"));
   ci::gl::Texture2dRef texture2D_coin = ci::gl::Texture2d::create(coin_image);
-  mylibrary::Location coin_loc = engine.GetCoin().GetLocation();
-  ci::gl::draw(texture2D_coin,ci::Rectf(coin_loc.Row(), coin_loc.Col(),
-                   coin_loc.Row() + lane_width, coin_loc.Col() +
-                   coin_height));
+  std::vector<mylibrary::Coin> coins = engine.GetCoin();
+  for (int i = 0; i < coins.size(); i++) {
+    mylibrary::Location coin_loc = coins[i].GetLocation();
+    ci::gl::draw(texture2D_coin, ci::Rectf(coin_loc.Row(), coin_loc.Col(),
+                                           coin_loc.Row() + lane_width,
+                                           coin_loc.Col() + coin_height));
+  }
 }
 
 void MyApp::DrawObstacle() {
-  auto obstacle_image = loadImage( loadAsset( "police_car.jpg"));
-  ci::gl::Texture2dRef texture2D_coin = ci::gl::Texture2d::create(obstacle_image);
-  mylibrary::Location obstacle_loc = engine.GetObstacle().GetLocation();
-  ci::gl::draw(texture2D_coin,ci::Rectf(obstacle_loc.Row(), obstacle_loc.Col(),
-                                        obstacle_loc.Row() +
-                                        lane_width,obstacle_loc.Col() + car_height));
+  auto obstacle_image = loadImage(loadAsset("obstacle.jpg"));
+  ci::gl::Texture2dRef texture2D_coin =
+      ci::gl::Texture2d::create(obstacle_image);
+  std::vector<mylibrary::Obstacle> obstacles = engine.GetObstacle();
+  for (int i = 0; i < obstacles.size(); i++) {
+    mylibrary::Location obstacle_loc = obstacles[i].GetLocation();
+    ci::gl::draw(texture2D_coin,
+                 ci::Rectf(obstacle_loc.Row(), obstacle_loc.Col(),
+                           obstacle_loc.Row() + lane_width,
+                           obstacle_loc.Col() + coin_height));
+  }
 }
 
 /*void MyApp::DrawTest() {
@@ -95,10 +103,12 @@ void MyApp::keyDown(KeyEvent event) {
   switch (event.getCode()) {
     case KeyEvent::KEY_RIGHT: {
       engine.SetDirection(mylibrary::Direction::right);
+      engine.MoveCar();
       break;
     }
     case KeyEvent::KEY_LEFT: {
       engine.SetDirection(mylibrary::Direction::left);
+      engine.MoveCar();
       break;
     }
   }

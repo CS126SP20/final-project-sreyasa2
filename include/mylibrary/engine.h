@@ -25,6 +25,8 @@ class Engine {
     
   void Step();
   
+  void MoveCar();
+  
   void Reset();
   
   void SetDirection(Direction);
@@ -33,9 +35,9 @@ class Engine {
   
   Car GetCar() const;
   
-  Obstacle GetObstacle() const;
+  std::vector<Obstacle> GetObstacle() const;
   
-  Coin GetCoin() const;
+  std::vector<Coin> GetCoin() const;
   
   int GetRandomLane() const;
   
@@ -48,11 +50,12 @@ class Engine {
   
  private:
   Car car;
-  Coin coin;
-  Obstacle obstacle;
+  std::vector<Coin> coins;
+  std::vector<Obstacle> obstacles;
   Direction next_direction;
   size_t size;
   std::vector<Location> occupied_lanes;
+  int score;
 };
 }
 #endif  // FINALPROJECT_ENGINE_H

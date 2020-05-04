@@ -37,7 +37,8 @@ class MyApp : public cinder::app::App {
   void DrawCoin();
   void DrawObstacle();
   void DrawTest();
-  std::chrono::time_point<std::chrono::system_clock> last_time_;
+  std::chrono::time_point<std::chrono::system_clock> last_time_frame;
+  std::chrono::time_point<std::chrono::system_clock> last_time_car;
   GameState game_state;
   int lane_width = 95;
   int coin_height = 100;
