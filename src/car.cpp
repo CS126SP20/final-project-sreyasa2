@@ -15,5 +15,10 @@ Location Car::SetLocation(const Location& location_set) {
   location = location_set;
   return location;
 }
+void Car::Crash() {
+  hasCrashed = true;
+}
+
+bool Car::GetHasCrashed() { return hasCrashed; }
 
 }

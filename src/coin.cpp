@@ -13,6 +13,7 @@ Location Coin::SetLocation(const Location& location) {
   location_ = location;
   return location_;
 }
+bool Coin::operator==(const Coin& rhs) { return location_ == rhs.GetLocation(); }
 
 Coin::Coin(const Coin& Coin) = default;
 Coin::Coin(mylibrary::Coin&& Coin) noexcept = default;

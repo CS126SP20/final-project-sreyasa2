@@ -6,7 +6,10 @@
 #include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
 #include <mylibrary/engine.h>
-
+#include <mylibrary/location.h>
+#include <mylibrary/obstacle.h>
+#include <mylibrary/coin.h>
+#include <mylibrary/car.h>
 #include "CinderImGui.h"
 #include "cinder/ImageIo.h"
 #include "cinder/Vector.h"
@@ -47,6 +50,8 @@ class MyApp : public cinder::app::App {
   int vert_dist = 50;
   int hori_dist = 30;
   const size_t size = 800;
+  ci::gl::Texture2dRef texture2D_coin;
+  ci::gl::Texture2dRef texture2D_obstacle;
   mylibrary::Engine engine;
 };
 

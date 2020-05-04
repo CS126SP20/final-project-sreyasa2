@@ -7,7 +7,11 @@
 #include "cinder/ImageIo.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/Log.h"
-
+#include <mylibrary/location.h>
+#include <mylibrary/obstacle.h>
+#include <mylibrary/coin.h>
+#include "vector"
+#include <mylibrary/car.h>
 #include <iostream>
 
 namespace myapp {
@@ -28,6 +32,10 @@ void MyApp::setup() {
   enableFileLogging();
   enableFileLoggingRotating();
   enableSysLogging();
+  auto coin_image = loadImage( loadAsset( "coin.jpg"));
+  texture2D_coin = ci::gl::Texture2d::create(coin_image);
+  auto obstacle_image = loadImage(loadAsset("obstacle.jpg"));
+  texture2D_obstacle = ci::gl::Texture2d::create(obstacle_image);
 }
 
 void MyApp::update() {
@@ -67,8 +75,6 @@ void MyApp::DrawCar() {
 }
 
 void MyApp::DrawCoin() {
-  auto coin_image = loadImage( loadAsset( "coins.jpg"));
-  ci::gl::Texture2dRef texture2D_coin = ci::gl::Texture2d::create(coin_image);
   std::vector<mylibrary::Coin> coins = engine.GetCoin();
   for (int i = 0; i < coins.size(); i++) {
     mylibrary::Location coin_loc = coins[i].GetLocation();
@@ -79,13 +85,10 @@ void MyApp::DrawCoin() {
 }
 
 void MyApp::DrawObstacle() {
-  auto obstacle_image = loadImage(loadAsset("obstacle.jpg"));
-  ci::gl::Texture2dRef texture2D_coin =
-      ci::gl::Texture2d::create(obstacle_image);
   std::vector<mylibrary::Obstacle> obstacles = engine.GetObstacle();
   for (int i = 0; i < obstacles.size(); i++) {
     mylibrary::Location obstacle_loc = obstacles[i].GetLocation();
-    ci::gl::draw(texture2D_coin,
+    ci::gl::draw(texture2D_obstacle,
                  ci::Rectf(obstacle_loc.Row(), obstacle_loc.Col(),
                            obstacle_loc.Row() + lane_width,
                            obstacle_loc.Col() + coin_height));

@@ -17,6 +17,7 @@ class Obstacle {
   Obstacle(Obstacle&&) noexcept;
   Obstacle& operator=(const Obstacle&);
   Obstacle& operator=(Obstacle&&) noexcept;
+  bool operator==(const Obstacle&);
   ~Obstacle();
   
  private:

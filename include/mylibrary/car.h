@@ -14,6 +14,8 @@ class Car {
   explicit Car(const Location& location);
   Location GetLocation() const;
   Location SetLocation(const Location&);
+  void Crash();
+  bool GetHasCrashed();
   
  private:
   Location location;

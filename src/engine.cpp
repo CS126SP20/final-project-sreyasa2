@@ -16,9 +16,9 @@ namespace mylibrary {
 Location FromDirection(const Direction direction) {
   switch (direction) {
     case Direction::left:
-      return {-30, 0};
+      return {-125, 0};
     case Direction::right:
-      return {30, 0};
+      return {125, 0};
   }
 
   throw std::out_of_range("switch statement not matched");
@@ -27,8 +27,8 @@ Location FromDirection(const Direction direction) {
 Engine::Engine(const size_t size_input)
  : car(lanes[0]),
    next_direction(Direction::left) {
-  obstacles.push_back(Obstacle(lanes[1]));
-  coins.push_back(Coin(lanes[0]));
+  obstacles.emplace_back(lanes[1]);
+  coins.emplace_back(lanes[0]);
   occupied_lanes.push_back(obstacles[0].GetLocation());
   occupied_lanes.push_back(coins[0].GetLocation());
      size = size_input;
@@ -81,11 +81,11 @@ void Engine::Step() {
   }
   occupied_lanes.clear();
   for (int i = 0; i < 2; i++) {
-    Coin new_coin = Coin(GetObjectLocation());
+    Coin new_coin(GetObjectLocation());
     coins.push_back(new_coin);
   }
   for (int i = 0; i < 2; i++) {
-    Obstacle new_obstacle = Obstacle(GetObjectLocation());
+    Obstacle new_obstacle(GetObjectLocation());
     obstacles.push_back(new_obstacle);
   }
 }
@@ -96,17 +96,19 @@ void Engine::MoveCar() {
         car.GetLocation() == lanes[lanes.size() - 1])) {
     Location change_loc = FromDirection(next_direction);
     car.SetLocation(Location(car.GetLocation() + change_loc));
-  }
+  } 
   for (int i = 0; i < coins.size(); i++) {
     if (car.GetLocation() == coins[i].GetLocation()) {
       score++;
       auto iterator = std::find(coins.begin(), coins.end(), coins[i]);
       coins.erase(iterator);
+      break;
     }
   }
   for (int i = 0; i < obstacles.size(); i++) {
     if (car.GetLocation() == obstacles[i].GetLocation()) {
-      
+      car.Crash();
+      break;
     }
   }
 }

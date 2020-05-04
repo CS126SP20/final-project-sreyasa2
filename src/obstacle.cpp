@@ -24,5 +24,7 @@ Location Obstacle::SetLocation(const Location& location_set) {
   location = location_set;
   return location;
 }
+bool Obstacle::operator==(const Obstacle& rhs) { return location == rhs.GetLocation(); }
+
 
 } // namespace mylibrary
