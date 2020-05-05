@@ -24,7 +24,7 @@ Location FromDirection(const Direction direction) {
 }
 
 Engine::Engine(const size_t size_input)
- : car(Location(lanes[0].Row(), 600)),
+ : car(Location(lanes[0].Row(), 550)),
    next_direction(Direction::left) {
   obstacles.emplace_back(lanes[1]);
   coins.emplace_back(lanes[0]);
@@ -65,7 +65,7 @@ void Engine::Step() {
   for (int i = 0; i < coins.size(); i++) {
     Location coin_loc = coins[i].GetLocation();
     coins[i].SetLocation(Location(coin_loc.Row(), coin_loc.Col() + 150));
-    if (coins[i].GetLocation().Col() > 600) {
+    if (coins[i].GetLocation().Col() > 700) {
       auto iterator = std::find(coins.begin(), coins.end(), coins[i]);
       coins.erase(iterator);
     }
@@ -73,7 +73,7 @@ void Engine::Step() {
   for (int i = 0; i < obstacles.size(); i++) {
     Location obstacle_loc = obstacles[i].GetLocation();
     obstacles[i].SetLocation(Location(obstacle_loc.Row(), obstacle_loc.Col() + 150));
-    if (obstacles[i].GetLocation().Col() > 600) {
+    if (obstacles[i].GetLocation().Col() > 700) {
       auto iterator = std::find(obstacles.begin(), obstacles.end(), obstacles[i]);
       obstacles.erase(iterator);
     }
@@ -83,12 +83,13 @@ void Engine::Step() {
     Coin new_coin(GetObjectLocation());
     coins.push_back(new_coin);
   }
-  for (int i = 0; i < 1; i++) {
+  int difficulty = ci::randInt(0,2);
+  for (int i = 0; i < difficulty; i++) {
     Obstacle new_obstacle(GetObjectLocation());
     obstacles.push_back(new_obstacle);
   }
   for (int i = 0; i < coins.size(); i++) {
-    if (car.GetLocation() == coins[i].GetLocation()) {
+    if (Location(car.GetLocation().Row(), car.GetLocation().Col() + 50) == coins[i].GetLocation()) {
       score++;
       auto iterator = std::find(coins.begin(), coins.end(), coins[i]);
       coins.erase(iterator);
@@ -106,9 +107,9 @@ void Engine::Step() {
 
 void Engine::MoveCar() {
   if (!(next_direction == Direction::left && car.GetLocation()
-  == Location(lanes[0].Row(), 600)) && !(next_direction
+  == Location(lanes[0].Row(), 550)) && !(next_direction
   == Direction::right && car.GetLocation()
-  == Location(lanes[lanes.size() - 1].Row(), 600))) {
+  == Location(lanes[lanes.size() - 1].Row(), 550))) {
     Location change_loc = FromDirection(next_direction);
     car.SetLocation(Location(car.GetLocation() + change_loc));
   }

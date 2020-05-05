@@ -50,7 +50,7 @@ class MyApp : public cinder::app::App {
   int vert_dist = 50;
   int hori_dist = 30;
   const size_t size = 800;
-  size_t score = 0;
+  int score = 0;
   ci::gl::Texture2dRef texture2D_coin;
   ci::gl::Texture2dRef texture2D_obstacle;
   mylibrary::Engine engine;

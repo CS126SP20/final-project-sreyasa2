@@ -41,8 +41,8 @@ class Engine {
   
   int GetRandomLane() const;
   
-  const std::vector<Location> lanes{Location(170, 0), Location(290, 0),
-                                    Location(410, 0),Location(530, 0)};
+  const std::vector<Location> lanes{Location(170, 100), Location(290, 100),
+                                    Location(410, 100),Location(530, 100)};
   
  private:
   Location GetObjectLocation();

@@ -11,6 +11,7 @@
 #include <mylibrary/obstacle.h>
 #include <mylibrary/coin.h>
 #include "vector"
+#include <chrono>
 #include <mylibrary/car.h>
 #include <iostream>
 
@@ -21,12 +22,17 @@ using ci::gl::Texture;
 using namespace ci;
 using namespace ci::app;
 
+const char BoldFont[] = "Arial Bold";
+
 MyApp::MyApp():
     game_state{GameState::Playing},
     engine(size) {}
   
 
 void MyApp::setup() {
+  ImGui::initialize(ui::Options().font(
+      getAssetPath("Bebas-Regular.ttf"),
+      12).window(getWindow()));
   cinder::gl::enableDepthWrite();
   cinder::gl::enableDepthRead();
   enableFileLogging();
@@ -45,7 +51,7 @@ void MyApp::update() {
   }
   CI_LOG_V("Window bounds " << getWindowBounds());
   const auto time = std::chrono::system_clock::now();
-  if (time - last_time_frame > std::chrono::milliseconds(700)
+  if (time - last_time_frame > std::chrono::milliseconds(300)
   && game_state == GameState::Playing) {
     engine.Step();
     last_time_frame = time;
@@ -57,14 +63,16 @@ void MyApp::draw() {
   ci::gl::disableDepthRead();
   ci::gl::disableDepthWrite();
   ci::gl::enableAlphaBlending();
-  if (game_state == GameState::Over) {
-    DrawGameOver();
-    return;
-  }
   DrawBackground();
   DrawCoin();
   DrawObstacle();
   DrawCar();
+  const auto time = std::chrono::system_clock::now();
+  if ((game_state == GameState::Over)) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    DrawGameOver();
+    return;
+  }
   //DrawTest();
 }
 
@@ -87,9 +95,12 @@ void MyApp::DrawCoin() {
   std::vector<mylibrary::Coin> coins = engine.GetCoin();
   for (int i = 0; i < coins.size(); i++) {
     mylibrary::Location coin_loc = coins[i].GetLocation();
-    ci::gl::draw(texture2D_coin, ci::Rectf(coin_loc.Row(), coin_loc.Col(),
-                                           coin_loc.Row() + lane_width,
-                                           coin_loc.Col() + coin_height));
+    if (coin_loc.Col() > 550) {
+      continue;
+    }
+    ci::gl::draw(texture2D_coin, ci::Rectf(coin_loc.Row(),
+                                           coin_loc.Col() - coin_height,
+                                           coin_loc.Row() + lane_width, coin_loc.Col()));
   }
 }
 
@@ -97,15 +108,20 @@ void MyApp::DrawObstacle() {
   std::vector<mylibrary::Obstacle> obstacles = engine.GetObstacle();
   for (int i = 0; i < obstacles.size(); i++) {
     mylibrary::Location obstacle_loc = obstacles[i].GetLocation();
+    if (obstacle_loc.Col() > 550) {
+      continue;
+    }
     ci::gl::draw(texture2D_obstacle,
-                 ci::Rectf(obstacle_loc.Row(), obstacle_loc.Col(),
-                           obstacle_loc.Row() + lane_width,
-                           obstacle_loc.Col() + coin_height));
+                 ci::Rectf(obstacle_loc.Row(),
+                           obstacle_loc.Col() - coin_height, 
+                           obstacle_loc.Row() + lane_width, obstacle_loc.Col()));
   }
 }
 
 void MyApp::DrawGameOver() {
-  ci::gl::clear(ci::Color(1,0,0));
+  ci::gl::clear(ci::Color(0,0,0));
+  std::string score_string = std::to_string(score);
+  ImGui::Text("Game Over :( \n Score is:");
 }
 
 void MyApp::keyDown(KeyEvent event) { 
