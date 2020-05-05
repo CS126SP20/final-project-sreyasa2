@@ -39,7 +39,7 @@ class MyApp : public cinder::app::App {
   void DrawCar();
   void DrawCoin();
   void DrawObstacle();
-  void DrawTest();
+  void DrawGameOver();
   std::chrono::time_point<std::chrono::system_clock> last_time_frame;
   std::chrono::time_point<std::chrono::system_clock> last_time_car;
   GameState game_state;
@@ -50,6 +50,7 @@ class MyApp : public cinder::app::App {
   int vert_dist = 50;
   int hori_dist = 30;
   const size_t size = 800;
+  size_t score = 0;
   ci::gl::Texture2dRef texture2D_coin;
   ci::gl::Texture2dRef texture2D_obstacle;
   mylibrary::Engine engine;

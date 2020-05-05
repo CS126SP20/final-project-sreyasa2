@@ -39,9 +39,14 @@ void MyApp::setup() {
 }
 
 void MyApp::update() {
+  if (engine.GetCar().GetHasCrashed()) {
+    game_state = GameState::Over;
+    score = engine.GetScore();
+  }
   CI_LOG_V("Window bounds " << getWindowBounds());
   const auto time = std::chrono::system_clock::now();
-  if (time - last_time_frame > std::chrono::milliseconds(2000)) {
+  if (time - last_time_frame > std::chrono::milliseconds(700)
+  && game_state == GameState::Playing) {
     engine.Step();
     last_time_frame = time;
   }
@@ -52,10 +57,14 @@ void MyApp::draw() {
   ci::gl::disableDepthRead();
   ci::gl::disableDepthWrite();
   ci::gl::enableAlphaBlending();
+  if (game_state == GameState::Over) {
+    DrawGameOver();
+    return;
+  }
   DrawBackground();
-  DrawCar();
   DrawCoin();
   DrawObstacle();
+  DrawCar();
   //DrawTest();
 }
 
@@ -95,12 +104,9 @@ void MyApp::DrawObstacle() {
   }
 }
 
-/*void MyApp::DrawTest() {
-  ci::gl::drawSolidRect(ci::Rectf(290, 150, 385, 250));
-  ci::gl::drawSolidRect(ci::Rectf(170, 150, 265, 250));
-  ci::gl::drawSolidRect(ci::Rectf(410, 150, 505, 250));
-  ci::gl::drawSolidRect(ci::Rectf(530, 150, 625, 250));
-}*/
+void MyApp::DrawGameOver() {
+  ci::gl::clear(ci::Color(1,0,0));
+}
 
 void MyApp::keyDown(KeyEvent event) { 
   switch (event.getCode()) {
