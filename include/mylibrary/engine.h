@@ -12,8 +12,11 @@
 #include <random>
 #include <list>
 #include "cinder/Rand.h"
+#include "cinder/audio/audio.h"
 
 namespace mylibrary {
+
+using namespace ci;
 
 enum class Direction {left, right};
 
@@ -31,7 +34,7 @@ class Engine {
   
   void SetDirection(Direction);
   
-  size_t GetScore() const;
+  int GetScore() const;
   
   Car GetCar() const;
   

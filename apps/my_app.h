@@ -14,8 +14,11 @@
 #include "cinder/ImageIo.h"
 #include "cinder/Vector.h"
 #include "cinder/gl/Texture.h"
+#include "cinder/audio/audio.h"
 
 namespace myapp {
+
+using namespace ci;
 
 enum class GameState {
   Playing,
@@ -46,11 +49,21 @@ class MyApp : public cinder::app::App {
   int lane_width = 95;
   int coin_height = 100;
   int car_height = 200;
-  int speed_ = 300;
-  int vert_dist = 50;
-  int hori_dist = 30;
   const size_t size = 800;
   int score = 0;
+  int coin_number = 0;
+  /*ci::audio::SourceFileRef theme_song = audio::load(
+      app::loadAsset("theme_song.mp3"));
+  audio::VoiceRef theme_mp3 = audio::Voice::create(theme_song);
+  ci::audio::SourceFileRef game_over_song = audio::load(
+      app::loadAsset("game_over_sound.mp3"));
+  audio::VoiceRef game_over_mp3 = audio::Voice::create(game_over_song);
+  ci::audio::SourceFileRef coin_sound = audio::load(
+      app::loadAsset("coin_sound.mp3"));
+  audio::VoiceRef coin_mp3 = audio::Voice::create(coin_sound);
+  ci::audio::SourceFileRef crash_sound = audio::load(
+      app::loadAsset("car_crash.mp3"));
+  audio::VoiceRef crash_mp3 = audio::Voice::create(theme_song);*/
   ci::gl::Texture2dRef texture2D_coin;
   ci::gl::Texture2dRef texture2D_obstacle;
   mylibrary::Engine engine;

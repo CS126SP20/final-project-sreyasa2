@@ -89,10 +89,8 @@ void Engine::Step() {
     obstacles.push_back(new_obstacle);
   }
   for (int i = 0; i < coins.size(); i++) {
-    if (Location(car.GetLocation().Row(), car.GetLocation().Col() + 50) == coins[i].GetLocation()) {
+    if (car.GetLocation() == coins[i].GetLocation()) {
       score++;
-      auto iterator = std::find(coins.begin(), coins.end(), coins[i]);
-      coins.erase(iterator);
       break;
     }
   }
@@ -121,5 +119,5 @@ void Engine::SetDirection(Direction direction) {
 
 void Engine::Reset() {}
 
-size_t Engine::GetScore() const { return score; }
+int Engine::GetScore() const { return score; }
 }  // namespace mylibrary

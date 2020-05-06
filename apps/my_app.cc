@@ -12,7 +12,12 @@
 #include <mylibrary/coin.h>
 #include "vector"
 #include <chrono>
+#include <Windows.h>
+#pragma comment(lib, "winmm.lib")
+#include <mciapi.h>
 #include <mylibrary/car.h>
+#include <playsoundapi.h>
+
 #include <iostream>
 
 namespace myapp {
@@ -32,7 +37,7 @@ MyApp::MyApp():
 void MyApp::setup() {
   ImGui::initialize(ui::Options().font(
       getAssetPath("Bebas-Regular.ttf"),
-      12).window(getWindow()));
+      60).window(getWindow()));
   cinder::gl::enableDepthWrite();
   cinder::gl::enableDepthRead();
   enableFileLogging();
@@ -42,6 +47,8 @@ void MyApp::setup() {
   texture2D_coin = ci::gl::Texture2d::create(coin_image);
   auto obstacle_image = loadImage(loadAsset("obstacle.jpg"));
   texture2D_obstacle = ci::gl::Texture2d::create(obstacle_image);
+  PlaySoundA(R"(C:\Users\sreya\CLionProjects\cinder\cinder_0.9.2_vc2015\my_projects\final_project-sreyasa2\assets\music\theme_song.wav)", 
+      GetModuleHandle(NULL), SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
 void MyApp::update() {
@@ -49,7 +56,9 @@ void MyApp::update() {
     game_state = GameState::Over;
     score = engine.GetScore();
   }
-  CI_LOG_V("Window bounds " << getWindowBounds());
+  if (engine.GetCoin().size() == coin_number + 1 && coin_number != 0) {
+    coin_number++;
+  }
   const auto time = std::chrono::system_clock::now();
   if (time - last_time_frame > std::chrono::milliseconds(300)
   && game_state == GameState::Playing) {
@@ -67,8 +76,7 @@ void MyApp::draw() {
   DrawCoin();
   DrawObstacle();
   DrawCar();
-  const auto time = std::chrono::system_clock::now();
-  if ((game_state == GameState::Over)) {
+  if (game_state == GameState::Over) {
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     DrawGameOver();
     return;
@@ -120,8 +128,16 @@ void MyApp::DrawObstacle() {
 
 void MyApp::DrawGameOver() {
   ci::gl::clear(ci::Color(0,0,0));
+  auto game_over = loadImage( loadAsset( "game_over.jpg"));
+  ci::gl::Texture2dRef texture2D_gameOver = ci::gl::Texture2d::create(game_over);
+  ci::gl::draw(texture2D_gameOver, getWindowBounds());
   std::string score_string = std::to_string(score);
-  ImGui::Text("Game Over :( \n Score is:");
+  const char * scores = score_string.c_str();
+  ImGui::Begin("Score");
+  ImGui::Text("GAME OVER :( \n Your Score is: ");
+  ImGui::Text("%s", scores);
+  ImGui::End();
+  
 }
 
 void MyApp::keyDown(KeyEvent event) { 
