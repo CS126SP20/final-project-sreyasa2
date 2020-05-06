@@ -62,7 +62,7 @@ void MyApp::update() {
     score = engine.GetScore();
   }
   
-  if (engine.GetScore() == prev_score + 1) {
+  if (engine.GetScore() == prev_score + 1) {//checks if coin was collected
     coin_mp3->start();
     prev_score = engine.GetScore();
   }
@@ -74,7 +74,7 @@ void MyApp::update() {
     last_time_frame = time;
   }
   
-  if (!theme_mp3->isPlaying()) {
+  if (!theme_mp3->isPlaying()) { //looping theme song
     theme_mp3->start();
   }
   
