@@ -52,20 +52,21 @@ class MyApp : public cinder::app::App {
   int car_height = 200;
   const size_t size = 800;
   int score = 0;
-  int coin_number = 0;
+  int prev_score = 0;
   int speed = 300;
-  /*ci::audio::SourceFileRef theme_song = audio::load(
-      app::loadAsset("theme_song.mp3"));
+  bool isEndMusicOn = false;
+  ci::audio::SourceFileRef theme_song = audio::load(
+      app::loadAsset("music/theme_song.wav"));
   audio::VoiceRef theme_mp3 = audio::Voice::create(theme_song);
   ci::audio::SourceFileRef game_over_song = audio::load(
-      app::loadAsset("game_over_sound.mp3"));
+      app::loadAsset("music/game_over_sound.wav"));
   audio::VoiceRef game_over_mp3 = audio::Voice::create(game_over_song);
   ci::audio::SourceFileRef coin_sound = audio::load(
-      app::loadAsset("coin_sound.mp3"));
+      app::loadAsset("music/coin_sound.wav"));
   audio::VoiceRef coin_mp3 = audio::Voice::create(coin_sound);
   ci::audio::SourceFileRef crash_sound = audio::load(
-      app::loadAsset("car_crash.mp3"));
-  audio::VoiceRef crash_mp3 = audio::Voice::create(theme_song);*/
+      app::loadAsset("music/car_crash.wav"));
+  audio::VoiceRef crash_mp3 = audio::Voice::create(crash_sound);
   ci::gl::Texture2dRef texture2D_coin;
   ci::gl::Texture2dRef texture2D_obstacle;
   mylibrary::Engine engine;

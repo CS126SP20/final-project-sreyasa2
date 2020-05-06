@@ -14,11 +14,6 @@
 #include <chrono>
 #include <Windows.h>
 #pragma comment(lib, "winmm.lib")
-#include <mciapi.h>
-#include <mylibrary/car.h>
-#include <playsoundapi.h>
-
-#include <iostream>
 
 namespace myapp {
 
@@ -27,14 +22,13 @@ using ci::gl::Texture;
 using namespace ci;
 using namespace ci::app;
 
-const char BoldFont[] = "Arial Bold";
-
 MyApp::MyApp():
     engine(size),
     game_state(GameState::Started){}
   
 
 void MyApp::setup() {
+  theme_mp3->start();
   ImGui::initialize(ui::Options().font(
       getAssetPath("Bebas-Regular.ttf"),
       60).window(getWindow()));
@@ -44,22 +38,31 @@ void MyApp::setup() {
   texture2D_coin = ci::gl::Texture2d::create(coin_image);
   auto obstacle_image = loadImage(loadAsset("obstacle.jpg"));
   texture2D_obstacle = ci::gl::Texture2d::create(obstacle_image);
-  PlaySoundA(R"(C:\Users\sreya\CLionProjects\cinder\cinder_0.9.2_vc2015\my_projects\final_project-sreyasa2\assets\music\theme_song.wav)", 
-      GetModuleHandle(NULL), SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
 void MyApp::update() {
-  if (game_state == GameState::Over || game_state == GameState::Paused) {
+  if (game_state == GameState::Over) {
+    theme_mp3->stop();
+    if (!isEndMusicOn) {
+      game_over_mp3->start();
+      isEndMusicOn = true;
+    }
+    return;
+  }
+
+  if (game_state == GameState::Paused) {
     return;
   }
   
   if (engine.GetCar().GetHasCrashed()) {
+    crash_mp3->start();
     game_state = GameState::Over;
     score = engine.GetScore();
   }
   
-  if (engine.GetCoin().size() == coin_number + 1 && coin_number != 0) {
-    coin_number++;
+  if (engine.GetScore() == prev_score + 1) {
+    coin_mp3->start();
+    prev_score = engine.GetScore();
   }
   
   const auto time = std::chrono::system_clock::now();
