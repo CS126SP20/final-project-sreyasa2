@@ -22,29 +22,30 @@ using namespace ci;
 
 enum class GameState {
   Playing,
+  Started,
   Paused,
   Over,
 };
 
 class MyApp : public cinder::app::App {
+  
  public:
   MyApp();
   void setup() override;
   void update() override;
   void draw() override;
   void keyDown(cinder::app::KeyEvent) override;
-  void enableFileLogging();
-  void enableFileLoggingRotating();
-  void enableSysLogging();
   
  private:
+  
   void DrawBackground();
   void DrawCar();
   void DrawCoin();
   void DrawObstacle();
   void DrawGameOver();
+  void DrawGameStart();
+  void DrawGamePause();
   std::chrono::time_point<std::chrono::system_clock> last_time_frame;
-  std::chrono::time_point<std::chrono::system_clock> last_time_car;
   GameState game_state;
   int lane_width = 95;
   int coin_height = 100;
@@ -52,6 +53,7 @@ class MyApp : public cinder::app::App {
   const size_t size = 800;
   int score = 0;
   int coin_number = 0;
+  int speed = 300;
   /*ci::audio::SourceFileRef theme_song = audio::load(
       app::loadAsset("theme_song.mp3"));
   audio::VoiceRef theme_mp3 = audio::Voice::create(theme_song);

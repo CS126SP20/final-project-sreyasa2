@@ -30,8 +30,8 @@ using namespace ci::app;
 const char BoldFont[] = "Arial Bold";
 
 MyApp::MyApp():
-    game_state{GameState::Playing},
-    engine(size) {}
+    engine(size),
+    game_state(GameState::Started){}
   
 
 void MyApp::setup() {
@@ -40,9 +40,6 @@ void MyApp::setup() {
       60).window(getWindow()));
   cinder::gl::enableDepthWrite();
   cinder::gl::enableDepthRead();
-  enableFileLogging();
-  enableFileLoggingRotating();
-  enableSysLogging();
   auto coin_image = loadImage( loadAsset( "coin.jpg"));
   texture2D_coin = ci::gl::Texture2d::create(coin_image);
   auto obstacle_image = loadImage(loadAsset("obstacle.jpg"));
@@ -52,15 +49,21 @@ void MyApp::setup() {
 }
 
 void MyApp::update() {
+  if (game_state == GameState::Over || game_state == GameState::Paused) {
+    return;
+  }
+  
   if (engine.GetCar().GetHasCrashed()) {
     game_state = GameState::Over;
     score = engine.GetScore();
   }
+  
   if (engine.GetCoin().size() == coin_number + 1 && coin_number != 0) {
     coin_number++;
   }
+  
   const auto time = std::chrono::system_clock::now();
-  if (time - last_time_frame > std::chrono::milliseconds(300)
+  if (time - last_time_frame > std::chrono::milliseconds(speed)
   && game_state == GameState::Playing) {
     engine.Step();
     last_time_frame = time;
@@ -68,20 +71,32 @@ void MyApp::update() {
 }
 
 void MyApp::draw() {
-  ci::gl::clear(ci::Color( 0, 0, 0 ));
+  ci::gl::clear(ci::Color(0, 0, 0));
   ci::gl::disableDepthRead();
   ci::gl::disableDepthWrite();
   ci::gl::enableAlphaBlending();
-  DrawBackground();
-  DrawCoin();
-  DrawObstacle();
-  DrawCar();
+  
   if (game_state == GameState::Over) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));//delay for 1 second.
     DrawGameOver();
     return;
   }
-  //DrawTest();
+  
+  if (game_state == GameState::Paused) {
+    DrawGamePause();
+    return;
+  }
+  
+  if (game_state == GameState::Started) {
+    DrawGameStart();
+  }
+  
+  if (game_state == GameState::Playing) {
+    DrawBackground();
+    DrawCoin();
+    DrawObstacle();
+    DrawCar();
+  }
 }
 
 void MyApp::DrawBackground() {
@@ -103,7 +118,7 @@ void MyApp::DrawCoin() {
   std::vector<mylibrary::Coin> coins = engine.GetCoin();
   for (int i = 0; i < coins.size(); i++) {
     mylibrary::Location coin_loc = coins[i].GetLocation();
-    if (coin_loc.Col() > 550) {
+    if (coin_loc.Col() > engine.GetCar().GetLocation().Col()) { //to make up for delay between engine and draw
       continue;
     }
     ci::gl::draw(texture2D_coin, ci::Rectf(coin_loc.Row(),
@@ -116,7 +131,7 @@ void MyApp::DrawObstacle() {
   std::vector<mylibrary::Obstacle> obstacles = engine.GetObstacle();
   for (int i = 0; i < obstacles.size(); i++) {
     mylibrary::Location obstacle_loc = obstacles[i].GetLocation();
-    if (obstacle_loc.Col() > 550) {
+    if (obstacle_loc.Col() > engine.GetCar().GetLocation().Col()) { //to make up for delay between engine and draw
       continue;
     }
     ci::gl::draw(texture2D_obstacle,
@@ -124,6 +139,51 @@ void MyApp::DrawObstacle() {
                            obstacle_loc.Col() - coin_height, 
                            obstacle_loc.Row() + lane_width, obstacle_loc.Col()));
   }
+}
+
+void MyApp::keyDown(KeyEvent event) { 
+  switch (event.getCode()) {
+    case KeyEvent::KEY_RIGHT: {
+      if (game_state == GameState::Playing) {
+        engine.SetDirection(mylibrary::Direction::right);
+        engine.MoveCar();
+      }
+      break;
+    }
+    case KeyEvent::KEY_LEFT: {
+      if (game_state == GameState::Playing) {
+        engine.SetDirection(mylibrary::Direction::left);
+        engine.MoveCar();
+      }
+      break;
+    }
+    case KeyEvent::KEY_p: {
+      if (game_state == GameState::Playing) {
+        game_state = GameState::Paused;
+      }
+      break;
+    }
+  }
+}
+
+void MyApp::DrawGameStart() {
+  ci::gl::clear(ci::Color(0,0,0));
+  ImGui::Begin("START");
+  ImGui::Text("Instructions: \n use side-arrows to switch lanes. \n"
+              "Collect coins. \n Hitting obstacles will cause crashes.");
+  if (ImGui::Button("Start Game")) {
+    game_state = GameState::Playing;
+  }
+  ImGui::End();
+}
+
+void MyApp::DrawGamePause() {
+  ci::gl::clear(ci::Color(0,0,0));
+  ImGui::Begin("PAUSE");
+  if (ImGui::Button("Resume Game")) {
+    game_state = GameState::Playing;
+  }
+  ImGui::End();
 }
 
 void MyApp::DrawGameOver() {
@@ -134,42 +194,9 @@ void MyApp::DrawGameOver() {
   std::string score_string = std::to_string(score);
   const char * scores = score_string.c_str();
   ImGui::Begin("Score");
-  ImGui::Text("GAME OVER :( \n Your Score is: ");
+  ImGui::Text("Your Score is: ");
   ImGui::Text("%s", scores);
   ImGui::End();
-  
 }
-
-void MyApp::keyDown(KeyEvent event) { 
-  switch (event.getCode()) {
-    case KeyEvent::KEY_RIGHT: {
-      engine.SetDirection(mylibrary::Direction::right);
-      engine.MoveCar();
-      break;
-    }
-    case KeyEvent::KEY_LEFT: {
-      engine.SetDirection(mylibrary::Direction::left);
-      engine.MoveCar();
-      break;
-    }
-  }
-}
-
-void MyApp::enableFileLogging()
-{
- log::makeLogger<log::LoggerFile>( "/tmp/logging/cinder.log", true );
-}
-
-void MyApp::enableFileLoggingRotating()
-{
-  log::makeLogger<log::LoggerFileRotating>( "/tmp/logging", "cinder.%Y.%m.%d.log" );
-}
-
-void MyApp::enableSysLogging()
-{
-  auto sysLogger = log::makeLogger<log::LoggerSystem>();
-  sysLogger->setLoggingLevel( log::LEVEL_WARNING );
-}
-
 
 }  // namespace myapp

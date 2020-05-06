@@ -46,9 +46,14 @@ class Engine {
   
   const std::vector<Location> lanes{Location(170, 100), Location(290, 100),
                                     Location(410, 100),Location(530, 100)};
+  const int car_col = 550;
   
- private:
+  const int vert_shift = 150;
+  
+  const int screen_edge = 700;
+    
   Location GetObjectLocation();
+  
   Location GetCarLocation();
   
  private:
