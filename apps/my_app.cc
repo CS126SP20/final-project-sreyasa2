@@ -29,6 +29,7 @@ MyApp::MyApp():
 
 void MyApp::setup() {
   theme_mp3->start();
+  theme_mp3->setVolume(0.5);
   ImGui::initialize(ui::Options().font(
       getAssetPath("Bebas-Regular.ttf"),
       60).window(getWindow()));
@@ -45,6 +46,7 @@ void MyApp::update() {
     theme_mp3->stop();
     if (!isEndMusicOn) {
       game_over_mp3->start();
+      game_over_mp3->setVolume(0.8);
       isEndMusicOn = true;
     }
     return;
@@ -71,6 +73,11 @@ void MyApp::update() {
     engine.Step();
     last_time_frame = time;
   }
+  
+  if (!theme_mp3->isPlaying()) {
+    theme_mp3->start();
+  }
+  
 }
 
 void MyApp::draw() {
